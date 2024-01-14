@@ -114,9 +114,40 @@ func isValidSquare(row, col int) bool {
 }
 
 func isValidPawnMove(fromRow, fromCol, toRow, toCol int, board ChessBoard) bool {
-	// Implement pawn move validation logic
-	// Check for legal pawn moves, captures, and en passant
-	return true
+	// Determine the direction of movement (forward or backward based on player)
+	direction := 1 // Assuming white pawns start at the bottom (row 1)
+	if board[fromRow][fromCol] == "p" {
+		direction = -1 // Black pawns move in the opposite direction
+	}
+
+	// Check for a regular pawn move (one square forward)
+	if fromCol == toCol && toRow == fromRow+direction && board[toRow][toCol] == " " {
+		return true
+	}
+
+	// Check for the initial double pawn move (two squares forward)
+	if fromCol == toCol && toRow == fromRow+2*direction && fromRow == 1 && board[fromRow+direction][toCol] == " " {
+		return true
+	}
+
+	// Check for capturing an opponent's piece diagonally
+	if abs(toCol-fromCol) == 1 && toRow == fromRow+direction {
+		targetPiece := board[toRow][toCol]
+		if (direction == 1 && targetPiece >= "A" && targetPiece <= "Z") || (direction == -1 && targetPiece >= "a" && targetPiece <= "z") {
+			return true
+		}
+	}
+
+	// Implement en passant logic here
+
+	return false
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
 
 func makeMove(move string, board ChessBoard) ChessBoard {
