@@ -27,17 +27,17 @@ func NewPlayer(name string) *Player {
 
 // SwitchPlayer toggles the current player
 func (game *ChessGame) SwitchPlayer() {
-	if game.CurrentPlayer.Name == "Player 1" {
-		game.CurrentPlayer = NewPlayer("Player 2")
+	if game.CurrentPlayer.Name == "Player Upper" {
+		game.CurrentPlayer = NewPlayer("Player Lower")
 	} else {
-		game.CurrentPlayer = NewPlayer("Player 1")
+		game.CurrentPlayer = NewPlayer("Player Upper")
 	}
 }
 
 // NewChessGame initializes a new chess game
 func NewChessGame() *ChessGame {
 	return &ChessGame{
-		CurrentPlayer: NewPlayer("Player 1"),
+		CurrentPlayer: NewPlayer("Player Upper"),
 	}
 }
 
@@ -57,7 +57,7 @@ func initializeBoard() ChessBoard {
 
 func printBoard(board ChessBoard) {
 	fmt.Println("  a b c d e f g h")
-	for row := 7; row >= 0; row-- {
+	for row := 0; row < boardSize; row++ {
 		fmt.Printf("%d ", row+1)
 		for col := 0; col < boardSize; col++ {
 			fmt.Printf("%s ", board[row][col])
