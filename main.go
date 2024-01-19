@@ -79,23 +79,82 @@ func isValidMove(move string, board ChessBoard) bool {
 	case "P", "p": // Pawn
 		return isValidPawnMove(fromRow, fromCol, toRow, toCol, board)
 	case "N", "n": // Knight
-		// Implement knight move validation logic
-		return true
+		return isValidKnightMove(fromRow, fromCol, toRow, toCol, board)
 	case "R", "r": // Rook
-		// Implement rook move validation logic
-		return true
+		return isValidRookMove(fromRow, fromCol, toRow, toCol, board)
 	case "B", "b": // Bishop
-		// Implement bishop move validation logic
-		return true
+		return isValidBishopMove(fromRow, fromCol, toRow, toCol, board)
 	case "Q", "q": // Queen
-		// Implement queen move validation logic
-		return true
+		return isValidQueenMove(fromRow, fromCol, toRow, toCol, board)
 	case "K", "k": // King
-		// Implement king move validation logic
+		//return isValidKingMove(fromRow, fromCol, toRow, toCol, board)
 		return true
 	default:
 		return false // Invalid piece
 	}
+}
+
+func isValidKnightMove(fromRow, fromCol, toRow, toCol int, board ChessBoard) bool {
+	// Check if the destination is within the chessboard bounds
+	if toRow < 0 || toRow >= len(board) || toCol < 0 || toCol >= len(board[0]) {
+		return false
+	}
+
+	// Calculate the absolute difference in rows and columns
+	rowDiff := abs(fromRow - toRow)
+	colDiff := abs(fromCol - toCol)
+
+	// Check if the move is in an L-shape (2 squares horizontally and 1 square vertically, or vice versa)
+	return (rowDiff == 1 && colDiff == 2) || (rowDiff == 2 && colDiff == 1)
+}
+
+// isValidRookMove checks if a rook move is valid
+func isValidRookMove(fromRow, fromCol, toRow, toCol int, board ChessBoard) bool {
+	// Check if the destination is within the chessboard bounds
+	if toRow < 0 || toRow >= len(board) || toCol < 0 || toCol >= len(board[0]) {
+		return false
+	}
+
+	// Check if the move is either vertical or horizontal
+	if fromRow == toRow || fromCol == toCol {
+		return true
+	}
+
+	return false
+}
+
+// isValidBishopMove checks if a bishop move is valid
+func isValidBishopMove(fromRow, fromCol, toRow, toCol int, board ChessBoard) bool {
+	// Check if the destination is within the chessboard bounds
+	if toRow < 0 || toRow >= len(board) || toCol < 0 || toCol >= len(board[0]) {
+		return false
+	}
+
+	// Calculate the absolute difference in rows and columns
+	rowDiff := abs(fromRow - toRow)
+	colDiff := abs(fromCol - toCol)
+
+	// Check if the move is diagonal (equal absolute differences in rows and columns)
+	if rowDiff == colDiff {
+		return true
+	}
+
+	return false
+}
+
+// isValidQueenMove checks if a queen move is valid
+func isValidQueenMove(fromRow, fromCol, toRow, toCol int, board ChessBoard) bool {
+	// Check if the destination is within the chessboard bounds
+	if toRow < 0 || toRow >= len(board) || toCol < 0 || toCol >= len(board[0]) {
+		return false
+	}
+
+	// Calculate the absolute difference in rows and columns
+	rowDiff := abs(fromRow - toRow)
+	colDiff := abs(fromCol - toCol)
+
+	// Check if the move is either vertical, horizontal, or diagonal
+	return fromRow == toRow || fromCol == toCol || rowDiff == colDiff
 }
 
 func algebraicToIndices(square string) (int, int) {
@@ -137,9 +196,6 @@ func isValidPawnMove(fromRow, fromCol, toRow, toCol int, board ChessBoard) bool 
 			return true
 		}
 	}
-
-	// Implement en passant logic here
-
 	return false
 }
 
