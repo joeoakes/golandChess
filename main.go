@@ -11,23 +11,53 @@ const boardSize = 8
 
 type ChessBoard [boardSize][boardSize]string
 
+// Player represents a player in the chess game
+type Player struct {
+	Name string
+}
+
+type ChessGame struct {
+	CurrentPlayer *Player
+}
+
+// NewPlayer creates a new player with the given name
+func NewPlayer(name string) *Player {
+	return &Player{Name: name}
+}
+
+// SwitchPlayer toggles the current player
+func (game *ChessGame) SwitchPlayer() {
+	if game.CurrentPlayer.Name == "Player 1" {
+		game.CurrentPlayer = NewPlayer("Player 2")
+	} else {
+		game.CurrentPlayer = NewPlayer("Player 1")
+	}
+}
+
+// NewChessGame initializes a new chess game
+func NewChessGame() *ChessGame {
+	return &ChessGame{
+		CurrentPlayer: NewPlayer("Player 1"),
+	}
+}
+
 func initializeBoard() ChessBoard {
 	board := ChessBoard{}
 	// Initialize the board with pieces
 	// This is a simplified starting position
-	board[0] = [boardSize]string{"R", "N", "B", "Q", "K", "B", "N", "R"}
-	board[1] = [boardSize]string{"P", "P", "P", "P", "P", "P", "P", "P"}
+	board[7] = [boardSize]string{"R", "N", "B", "Q", "K", "B", "N", "R"}
+	board[6] = [boardSize]string{"P", "P", "P", "P", "P", "P", "P", "P"}
 	for i := 2; i < 6; i++ {
 		board[i] = [boardSize]string{" ", " ", " ", " ", " ", " ", " ", " "}
 	}
-	board[6] = [boardSize]string{"p", "p", "p", "p", "p", "p", "p", "p"}
-	board[7] = [boardSize]string{"r", "n", "b", "q", "k", "b", "n", "r"}
+	board[1] = [boardSize]string{"p", "p", "p", "p", "p", "p", "p", "p"}
+	board[0] = [boardSize]string{"r", "n", "b", "q", "k", "b", "n", "r"}
 	return board
 }
 
 func printBoard(board ChessBoard) {
 	fmt.Println("  a b c d e f g h")
-	for row := 0; row < boardSize; row++ {
+	for row := 7; row >= 0; row-- {
 		fmt.Printf("%d ", row+1)
 		for col := 0; col < boardSize; col++ {
 			fmt.Printf("%s ", board[row][col])
@@ -39,8 +69,10 @@ func printBoard(board ChessBoard) {
 func main() {
 	board := initializeBoard()
 	scanner := bufio.NewScanner(os.Stdin)
+	chessGame := NewChessGame()
 
 	for {
+		fmt.Printf("Current Player: %s\n", chessGame.CurrentPlayer.Name)
 		printBoard(board)
 		fmt.Print("Enter move (e.g., 'e2 to e4'): ")
 		scanner.Scan()
@@ -48,6 +80,7 @@ func main() {
 
 		if isValidMove(move, board) {
 			board = makeMove(move, board)
+			chessGame.SwitchPlayer()
 		} else {
 			fmt.Println("Invalid move. Try again.")
 		}
